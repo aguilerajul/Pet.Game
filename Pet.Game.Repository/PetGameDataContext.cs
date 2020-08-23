@@ -1,12 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Pet.Game.Domain.Entities;
+using Microsoft.Extensions.Configuration;
+using Pet.Game.Infrastructure.Helper;
+using Pet.Game.Repository.EntityConfigurations;
 
 namespace Pet.Game.Repository
 {
     public class PetGameDataContext : DbContext
-    {
-        private readonly string connectionString;
+    {        
+        public readonly IConfiguration configuration;
         private readonly bool useConsoleLogger;
 
         public PetGameDataContext()
@@ -14,15 +17,16 @@ namespace Pet.Game.Repository
 
         }
 
-        public PetGameDataContext(string connectionString, bool useConsoleLogger)
-        {
-            this.connectionString = connectionString;
+        public PetGameDataContext(IConfiguration configuration, bool useConsoleLogger)
+        {            
+            this.configuration = configuration;
             this.useConsoleLogger = useConsoleLogger;
         }
 
         public DbSet<Domain.Entities.Pet> Pets { get; set; }
         public DbSet<PetType> PetTypes { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<UserPets> UsersPets { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -38,8 +42,10 @@ namespace Pet.Game.Repository
                         .AddDebug();
                 });
 
+                var cnnPath = "ConnectionStrings:PetGameDataBase";
+                var connectionString = this.configuration == null ? ConfigurationHelper.GetSection(cnnPath).Value : this.configuration.GetSection(cnnPath).Value;
                 optionsBuilder
-                    .UseSqlServer(this.connectionString)
+                    .UseSqlServer(connectionString)
                     .UseLazyLoadingProxies();
 
                 if(useConsoleLogger)
@@ -53,11 +59,10 @@ namespace Pet.Game.Repository
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            string idPropertyName = "Id";
-
-            modelBuilder.Entity<User>().HasKey(idPropertyName);
-            modelBuilder.Entity<Domain.Entities.Pet>().HasKey(idPropertyName);
-            modelBuilder.Entity<PetType>().HasKey(idPropertyName);
+            modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new PetTyeEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new PetEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new UserPetsEntityConfiguration());            
         }
 
     }

@@ -1,21 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Pet.Game.Domain.Interfaces;
+using Pet.Game.Repository.Implementations;
+using AutoMapper;
+using System;
 
 namespace Pet.Game.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment env;
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
+            this.env = env;
             Configuration = configuration;
         }
 
@@ -24,9 +25,32 @@ namespace Pet.Game.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(setup =>
+            {
+                setup.ReturnHttpNotAcceptable = true;
+            });
 
             services.AddSwaggerGen();
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddSingleton<IConfiguration>(provider => this.Configuration);
+
+            var isHostingServiceEnabled = bool.Parse(this.Configuration.GetSection("IsCheckStatusBackgroundServiceEnabled").Value);
+            if (isHostingServiceEnabled)
+            {
+                services.AddHostedService<BackgroundServices.CheckPetStatusesService>();
+            }
+
+            AddRepositories(services);
+        }
+
+        private static void AddRepositories(IServiceCollection services)
+        {
+            services.AddTransient<IUserPetsRepository, UserPetsRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IPetRepository, PetRepository>();
+            services.AddTransient<IPetTypeRepository, PetTypeRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

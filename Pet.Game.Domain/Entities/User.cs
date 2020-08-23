@@ -1,17 +1,23 @@
 ﻿using Pet.Game.Domain.Base;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Pet.Game.Domain.Entities
 {
     public class User : EntityBase
     {
-        public virtual IEnumerable<Pet> Pets { get; set; }
+        private readonly List<Pet> pets = new List<Pet>();
+        public virtual IReadOnlyCollection<Pet> Pets => pets.ToList();
 
         protected User() { }
 
-        private User(string name, IEnumerable<Pet> pets) : base(name)
+        public User(string name, IEnumerable<Pet> pets) : base(name)
         {
-            this.Pets = pets;
+            this.pets = (pets ?? Enumerable.Empty<Pet>()).ToList();
+        }
+        public void AddPet(Pet pet)
+        {
+            this.pets.Add(new Pet(pet.Name, pet.Type, pet.HappinessDecreaseInterval, pet.HungrinessIncreaseInterval));
         }
     }
 }

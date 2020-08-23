@@ -8,7 +8,6 @@ namespace Pet.Game.Domain.Base
     {
         Task<T> GetAsync(Guid id);
         Task<IEnumerable<T>> ListAsync();
-        Task<T> AddAsync(T entity);
-        Task<T> UpdateAsync(Guid id, T entity);
+        Task<T> AddOrUpdateAsync(T entity);
     }
 }

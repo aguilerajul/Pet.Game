@@ -8,11 +8,11 @@ using Microsoft.Extensions.Logging;
 using Pet.Game.Domain.Entities;
 using Pet.Game.Domain.Interfaces;
 
-namespace Pet.Game.WorkerService
+namespace Pet.Game.BackgroundServices
 {
-    public class Worker : BackgroundService
+    public class CheckPetStatusesService : BackgroundService
     {
-        private readonly ILogger<Worker> logger;
+        private readonly ILogger<CheckPetStatusesService> logger;
         private IUserRepository userRepository;
         private IPetRepository petRepository;
 
@@ -21,7 +21,7 @@ namespace Pet.Game.WorkerService
         private IEnumerable<User> users;
 
 
-        public Worker(ILogger<Worker> logger,
+        public CheckPetStatusesService(ILogger<CheckPetStatusesService> logger,
             IUserRepository userRepository,
             IPetRepository petRepository)
         {

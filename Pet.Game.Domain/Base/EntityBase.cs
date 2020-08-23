@@ -5,25 +5,22 @@ namespace Pet.Game.Domain.Base
 {
     public abstract class EntityBase
     {
-        private Guid _id;
-        public Guid Id => _id;
+        public Guid Id { get; }
 
-        private DateTime _created;
-        public DateTime Created => _created;
+        public DateTime Created { get; private set; }
 
         public DateTime LastModified { get; set; }
 
         [Required]
-        string Name { get; }
+		[MaxLength(150)]
+        public string Name { get; private set; }
 
         protected EntityBase() { }
 
         protected EntityBase(string name): this()
         {
-            this._id = Guid.NewGuid();
-            this._created = DateTime.UtcNow;
-            this.LastModified = DateTime.UtcNow;
-
+            this.Created = DateTime.UtcNow;
+            this.LastModified = DateTime.UtcNow;			
             this.Name = name;
         }
 
@@ -71,7 +68,7 @@ namespace Pet.Game.Domain.Base
 		private Type GetOriginalType()
 		{
 			Type type = GetType();
-			if (type.ToString().Contains("Pet.Game."))
+			if (type.ToString().Contains("Castle.Proxies."))
 				return type.BaseType;
 
 			return type;
