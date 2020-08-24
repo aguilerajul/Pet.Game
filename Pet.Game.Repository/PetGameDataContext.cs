@@ -4,11 +4,12 @@ using Pet.Game.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Pet.Game.Infrastructure.Helper;
 using Pet.Game.Repository.EntityConfigurations;
+using Pet.Game.Repository.Extensions;
 
 namespace Pet.Game.Repository
 {
     public class PetGameDataContext : DbContext
-    {        
+    {
         public readonly IConfiguration configuration;
         private readonly bool useConsoleLogger;
 
@@ -18,7 +19,7 @@ namespace Pet.Game.Repository
         }
 
         public PetGameDataContext(IConfiguration configuration, bool useConsoleLogger)
-        {            
+        {
             this.configuration = configuration;
             this.useConsoleLogger = useConsoleLogger;
         }
@@ -26,16 +27,16 @@ namespace Pet.Game.Repository
         public DbSet<Domain.Entities.Pet> Pets { get; set; }
         public DbSet<PetType> PetTypes { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<UserPets> UsersPets { get; set; }
+        //public DbSet<UserPets> UsersPets { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if(!optionsBuilder.IsConfigured)
+            if (!optionsBuilder.IsConfigured)
             {
                 ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
                 {
                     builder
-                        .AddFilter((category, level) => 
+                        .AddFilter((category, level) =>
                             category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information
                         )
                         .AddConsole()
@@ -48,7 +49,7 @@ namespace Pet.Game.Repository
                     .UseSqlServer(connectionString)
                     .UseLazyLoadingProxies();
 
-                if(useConsoleLogger)
+                if (useConsoleLogger)
                 {
                     optionsBuilder
                     .UseLoggerFactory(loggerFactory)
@@ -62,7 +63,9 @@ namespace Pet.Game.Repository
             modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
             modelBuilder.ApplyConfiguration(new PetTyeEntityConfiguration());
             modelBuilder.ApplyConfiguration(new PetEntityConfiguration());
-            modelBuilder.ApplyConfiguration(new UserPetsEntityConfiguration());            
+            //modelBuilder.ApplyConfiguration(new UserPetsEntityConfiguration());
+
+            ModelBuilderExtensions.Seed(modelBuilder);
         }
 
     }

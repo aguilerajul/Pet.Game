@@ -5,7 +5,7 @@ namespace Pet.Game.Domain.Base
 {
     public abstract class EntityBase
     {
-        public Guid Id { get; }
+        public Guid Id { get; internal set; }
 
         public DateTime Created { get; private set; }
 
@@ -24,54 +24,9 @@ namespace Pet.Game.Domain.Base
             this.Name = name;
         }
 
-		public override bool Equals(object obj)
+		public void SetId(Guid id)
 		{
-			if (!(obj is EntityBase other))
-				return false;
-
-			if (ReferenceEquals(this, other))
-				return true;
-
-			if (Id == Guid.Empty || other.Id == Guid.Empty)
-				return false;
-
-			if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(other.Name))
-				return false;
-
-			if (GetOriginalType() != other.GetOriginalType())
-				return false;
-
-			return this.Id == other.Id;
-		}
-
-		public override int GetHashCode()
-		{
-			return HashCode.Combine(Id, Name);
-		}
-
-		public static bool operator ==(EntityBase entityA, EntityBase entityB)
-		{
-			if (entityA is null && entityB is null)
-				return true;
-
-			if (entityA is null || entityB is null)
-				return false;
-
-			return entityA.Equals(entityB);
-		}
-
-		public static bool operator !=(EntityBase entityA, EntityBase entityB)
-		{
-			return !(entityA == entityB);
-		}
-
-		private Type GetOriginalType()
-		{
-			Type type = GetType();
-			if (type.ToString().Contains("Castle.Proxies."))
-				return type.BaseType;
-
-			return type;
+			this.Id = id;
 		}
 	}
 }

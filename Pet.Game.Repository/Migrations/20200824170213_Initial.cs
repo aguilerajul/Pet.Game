@@ -7,9 +7,6 @@ namespace Pet.Game.Repository.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.EnsureSchema(
-                name: "dbo");
-
             migrationBuilder.CreateTable(
                 name: "PetTypes",
                 columns: table => new
@@ -17,7 +14,9 @@ namespace Pet.Game.Repository.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
                     LastModified = table.Column<DateTime>(nullable: false),
-                    Name = table.Column<string>(maxLength: 150, nullable: false)
+                    Name = table.Column<string>(maxLength: 150, nullable: false),
+                    HappinessInterval = table.Column<int>(nullable: false),
+                    HungrinessInterval = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -48,8 +47,7 @@ namespace Pet.Game.Repository.Migrations
                     Name = table.Column<string>(maxLength: 150, nullable: false),
                     HungrinessStatus = table.Column<int>(nullable: false),
                     HappinessStatus = table.Column<int>(nullable: false),
-                    HappinessDecreaseInterval = table.Column<int>(nullable: false),
-                    HungrinessIncreaseInterval = table.Column<int>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: true),
                     TypeId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
@@ -61,30 +59,23 @@ namespace Pet.Game.Repository.Migrations
                         principalTable: "PetTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserPets",
-                schema: "dbo",
-                columns: table => new
-                {
-                    UserId = table.Column<Guid>(nullable: true),
-                    PetId = table.Column<Guid>(nullable: true)
-                },
-                constraints: table =>
-                {
                     table.ForeignKey(
-                        name: "FK_UserPets_Pets_PetId",
-                        column: x => x.PetId,
-                        principalTable: "Pets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_UserPets_Users_UserId",
+                        name: "FK_Pets_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.InsertData(
+                table: "PetTypes",
+                columns: new[] { "Id", "Created", "HappinessInterval", "HungrinessInterval", "LastModified", "Name" },
+                values: new object[,]
+                {
+                    { new Guid("93d124c5-7669-45ec-ba23-10d125ad8f1a"), new DateTime(2020, 8, 24, 17, 2, 13, 483, DateTimeKind.Utc).AddTicks(3631), 1, 1, new DateTime(2020, 8, 24, 17, 2, 13, 483, DateTimeKind.Utc).AddTicks(4062), "Cats" },
+                    { new Guid("07fbf68d-0823-45a3-8e39-3b10dfa8984d"), new DateTime(2020, 8, 24, 17, 2, 13, 484, DateTimeKind.Utc).AddTicks(6170), 1, 1, new DateTime(2020, 8, 24, 17, 2, 13, 484, DateTimeKind.Utc).AddTicks(6173), "Dogs" },
+                    { new Guid("630660ca-4af6-49bc-bbc5-b425475f4326"), new DateTime(2020, 8, 24, 17, 2, 13, 484, DateTimeKind.Utc).AddTicks(6442), 1, 1, new DateTime(2020, 8, 24, 17, 2, 13, 484, DateTimeKind.Utc).AddTicks(6442), "Birds" },
+                    { new Guid("37804ed4-d0d3-4058-82fc-ae9c37b19dba"), new DateTime(2020, 8, 24, 17, 2, 13, 484, DateTimeKind.Utc).AddTicks(6466), 1, 1, new DateTime(2020, 8, 24, 17, 2, 13, 484, DateTimeKind.Utc).AddTicks(6466), "Reptiles" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -93,32 +84,21 @@ namespace Pet.Game.Repository.Migrations
                 column: "TypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserPets_PetId",
-                schema: "dbo",
-                table: "UserPets",
-                column: "PetId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserPets_UserId",
-                schema: "dbo",
-                table: "UserPets",
+                name: "IX_Pets_UserId",
+                table: "Pets",
                 column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "UserPets",
-                schema: "dbo");
-
-            migrationBuilder.DropTable(
                 name: "Pets");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "PetTypes");
 
             migrationBuilder.DropTable(
-                name: "PetTypes");
+                name: "Users");
         }
     }
 }

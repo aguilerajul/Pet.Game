@@ -16,10 +16,10 @@ namespace Pet.Game.API.Controllers
     public class PetTypeController : ControllerBase
     {
         private readonly IMapper mapper;
-        private readonly ILogger<UserController> logger;
+        private readonly ILogger<PetTypeController> logger;
         private readonly IPetTypeRepository petTypeRepository;
 
-        public PetTypeController(ILogger<UserController> logger, IPetTypeRepository petTypeRepository, IMapper mapper)
+        public PetTypeController(ILogger<PetTypeController> logger, IPetTypeRepository petTypeRepository, IMapper mapper)
         {
             this.logger = logger;
             this.petTypeRepository = petTypeRepository;

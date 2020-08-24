@@ -2,9 +2,13 @@
 namespace Pet.Game.Domain.Enums
 {
     public enum HungrinessStatus
-    {        
-        Hunger,
+    {
+        Full,
+        Normal,
+        Nice,
         Neutral,
-        Full
+        LittleHunger,
+        Middle,
+        Hunger
     }
 }

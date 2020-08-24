@@ -7,7 +7,7 @@ namespace Pet.Game.Repository.EntityConfigurations
         public void Configure(EntityTypeBuilder<Domain.Entities.UserPets> builder)
         {
             builder.ToTable("UserPets", "dbo");
-            builder.HasNoKey();
+            builder.HasKey(x => x.Id);
             builder.HasOne(e => e.User)
                 .WithMany()
                 .HasForeignKey("UserId");

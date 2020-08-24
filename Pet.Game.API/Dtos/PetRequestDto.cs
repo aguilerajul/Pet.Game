@@ -1,13 +1,20 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Pet.Game.API.Dtos
 {
     public class PetRequestDto
     {
-        public Guid Id { get; set; }
+        [Required]
+        public Guid UserId { get; set; }
+
+        [Required]
+        public Guid PetId { get; set; }
+
+        [Required(AllowEmptyStrings = false)]
         public string Name { get; set; }
-        public int HappinessDecreaseInterval { get; set; }
-        public int HungrinessIncreaseInterval { get; set; }
+
+        [Required]
         public Guid TypeId { get; set; }
     }
 }
