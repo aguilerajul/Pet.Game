@@ -38,5 +38,4 @@ It's a very nice project add it in .NET Core that allow us to create simple host
 
 Manage all our REST API, and the CRUDS like GET, POST or PUT, PATCH and DELETE if they are need it.
 
-### Thank you very much and I hope on this time all of you can find something much better or at least not too badly.
 
