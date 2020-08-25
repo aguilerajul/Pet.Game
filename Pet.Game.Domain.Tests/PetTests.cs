@@ -1,8 +1,6 @@
 using FluentAssertions;
 using Pet.Game.Domain.Enums;
 using Pet.Game.Domain.Tests;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -29,7 +27,7 @@ namespace Pet.Game.API.Tests
         [Theory]
         [InlineData(HappinessStatus.Neutral)]
         [InlineData(HungrinessStatus.Neutral)]
-        public async Task Pet_Increase_Successfull<T>(T status)
+        public async Task Pet_Increase_Statusess_Successfull<T>(T status)
         {
             var mockedPet = this.mockedData.GetMockedPet("Boby", "Julio", "Dogs");
             var previousHappinessStatus = mockedPet.HappinessStatus;
@@ -55,7 +53,7 @@ namespace Pet.Game.API.Tests
         [Theory]
         [InlineData(HappinessStatus.Neutral)]
         [InlineData(HungrinessStatus.Neutral)]
-        public async Task Pet_Decrease_Successfull<T>(T status)
+        public async Task Pet_Decrease_Statusess_Successfull<T>(T status)
         {
             var mockedPet = this.mockedData.GetMockedPet("Boby", "Julio", "Dogs");
 
@@ -77,7 +75,7 @@ namespace Pet.Game.API.Tests
         }
 
         [Fact]
-        public void Stroke_Pet()
+        public void Stroke_Pet_To_Make_It_More_Happy()
         {
             var mockedPet = this.mockedData.GetMockedPet("Boby", "Julio", "Dogs");
             var previousHappinessStatus = mockedPet.HappinessStatus;
@@ -91,7 +89,7 @@ namespace Pet.Game.API.Tests
         }
 
         [Fact]
-        public void Feed_Pet()
+        public void Feed_Pet_To_Calm_Down_Hunger()
         {
             var mockedPet = this.mockedData.GetMockedPet("Boby", "Julio", "Dogs");
             var previousHungrinessStatus = mockedPet.HungrinessStatus;
