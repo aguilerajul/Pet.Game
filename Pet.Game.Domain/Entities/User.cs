@@ -1,6 +1,7 @@
 ﻿using Pet.Game.Domain.Base;
 using System.Linq;
 using System.Collections.Generic;
+using System;
 
 namespace Pet.Game.Domain.Entities
 {
@@ -11,13 +12,18 @@ namespace Pet.Game.Domain.Entities
 
         protected User() { }
 
-        public User(string name, IEnumerable<Pet> pets) : base(name)
+        public User(string name) : base(name)
         {
-            this.pets = (pets ?? Enumerable.Empty<Pet>()).ToList();
+            this.pets = Enumerable.Empty<Pet>().ToList();
         }
+
         public void AddPet(Pet pet)
         {
-            this.pets.Add(new Pet(pet.Name, pet.Type, pet.HappinessDecreaseInterval, pet.HungrinessIncreaseInterval));
+            var newPet = new Pet(pet.Name, pet.Type, this.Id);
+            if (Guid.Empty != pet.Id)
+                newPet.SetId(pet.Id);
+
+            this.pets.Add(newPet);
         }
     }
 }

@@ -7,8 +7,6 @@ namespace Pet.Game.Repository.EntityConfigurations
         public void Configure(EntityTypeBuilder<Domain.Entities.User> builder)
         {
             builder.HasKey(r => r.Id);
-            builder.HasMany(e => e.Pets);
-            builder.Ignore(u => u.Pets);
         }
     }
 }

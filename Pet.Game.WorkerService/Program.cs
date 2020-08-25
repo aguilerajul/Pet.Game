@@ -40,10 +40,17 @@ namespace Pet.Game.WorkerService
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddScoped<IUserRepository, UserRepository>();
+                    AddRepositories(services);
+
                     services.AddHostedService<Worker>();
                     services.AddMemoryCache();
                 })
                 .UseSerilog();
+
+        private static void AddRepositories(IServiceCollection services)
+        {
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IPetRepository, PetRepository>();
+        }
     }
 }

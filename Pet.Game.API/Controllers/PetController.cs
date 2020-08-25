@@ -15,10 +15,12 @@ namespace Pet.Game.API.Controllers
     public class PetController : ControllerBase
     {
         private readonly IMapper mapper;
-        private readonly ILogger<UserController> logger;
+        private readonly ILogger<PetController> logger;
         private readonly IPetRepository petRepository;
 
-        public PetController(ILogger<UserController> logger, IPetRepository petRepository, IMapper mapper)
+        public PetController(ILogger<PetController> logger,
+            IPetRepository petRepository,
+            IMapper mapper)
         {
             this.logger = logger;
             this.petRepository = petRepository;
@@ -58,22 +60,6 @@ namespace Pet.Game.API.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, "An Error has Occurred when we try to get the list of Users");
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-        [HttpPost]
-        [Route("AddPet")]
-        public async Task<IActionResult> Post([FromBody] PetRequestDto data)
-        {
-            try
-            {
-                var newPet = await this.petRepository.AddOrUpdateAsync(mapper.Map<Domain.Entities.Pet>(data));
-                return Ok(mapper.Map<PetResponseDto>(newPet));
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "An Error has Occurred when we try to add a new user");
                 return StatusCode(500, ex.Message);
             }
         }

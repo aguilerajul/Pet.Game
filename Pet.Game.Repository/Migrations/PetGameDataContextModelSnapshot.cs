@@ -28,13 +28,7 @@ namespace Pet.Game.Repository.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("HappinessDecreaseInterval")
-                        .HasColumnType("int");
-
                     b.Property<int>("HappinessStatus")
-                        .HasColumnType("int");
-
-                    b.Property<int>("HungrinessIncreaseInterval")
                         .HasColumnType("int");
 
                     b.Property<int>("HungrinessStatus")
@@ -51,9 +45,14 @@ namespace Pet.Game.Repository.Migrations
                     b.Property<Guid>("TypeId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("TypeId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Pets");
                 });
@@ -67,6 +66,12 @@ namespace Pet.Game.Repository.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("HappinessInterval")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HungrinessInterval")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("datetime2");
 
@@ -78,6 +83,44 @@ namespace Pet.Game.Repository.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PetTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("6493657c-81cb-4a85-b71a-3ce8a7d2d312"),
+                            Created = new DateTime(2020, 8, 25, 9, 40, 48, 186, DateTimeKind.Utc).AddTicks(51),
+                            HappinessInterval = 1,
+                            HungrinessInterval = 1,
+                            LastModified = new DateTime(2020, 8, 25, 9, 40, 48, 186, DateTimeKind.Utc).AddTicks(1409),
+                            Name = "Cats"
+                        },
+                        new
+                        {
+                            Id = new Guid("dc3eb6fc-a47c-41a2-8367-1de4834574a1"),
+                            Created = new DateTime(2020, 8, 25, 9, 40, 48, 190, DateTimeKind.Utc).AddTicks(4408),
+                            HappinessInterval = 1,
+                            HungrinessInterval = 1,
+                            LastModified = new DateTime(2020, 8, 25, 9, 40, 48, 190, DateTimeKind.Utc).AddTicks(4451),
+                            Name = "Dogs"
+                        },
+                        new
+                        {
+                            Id = new Guid("5d676e75-af7d-4925-9991-cca8973afac7"),
+                            Created = new DateTime(2020, 8, 25, 9, 40, 48, 190, DateTimeKind.Utc).AddTicks(5217),
+                            HappinessInterval = 1,
+                            HungrinessInterval = 1,
+                            LastModified = new DateTime(2020, 8, 25, 9, 40, 48, 190, DateTimeKind.Utc).AddTicks(5223),
+                            Name = "Birds"
+                        },
+                        new
+                        {
+                            Id = new Guid("d5426c61-0bb7-47cd-85a2-df74dca3ddc3"),
+                            Created = new DateTime(2020, 8, 25, 9, 40, 48, 190, DateTimeKind.Utc).AddTicks(5295),
+                            HappinessInterval = 1,
+                            HungrinessInterval = 1,
+                            LastModified = new DateTime(2020, 8, 25, 9, 40, 48, 190, DateTimeKind.Utc).AddTicks(5299),
+                            Name = "Reptiles"
+                        });
                 });
 
             modelBuilder.Entity("Pet.Game.Domain.Entities.User", b =>
@@ -102,21 +145,6 @@ namespace Pet.Game.Repository.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Pet.Game.Domain.Entities.UserPets", b =>
-                {
-                    b.Property<Guid?>("PetId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasIndex("PetId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserPets","dbo");
-                });
-
             modelBuilder.Entity("Pet.Game.Domain.Entities.Pet", b =>
                 {
                     b.HasOne("Pet.Game.Domain.Entities.PetType", "Type")
@@ -124,17 +152,12 @@ namespace Pet.Game.Repository.Migrations
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
 
-            modelBuilder.Entity("Pet.Game.Domain.Entities.UserPets", b =>
-                {
-                    b.HasOne("Pet.Game.Domain.Entities.Pet", "Pet")
-                        .WithMany()
-                        .HasForeignKey("PetId");
-
-                    b.HasOne("Pet.Game.Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                    b.HasOne("Pet.Game.Domain.Entities.User", null)
+                        .WithMany("Pets")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -17,19 +17,18 @@ namespace Pet.Game.Repository.Implementations
 
         public async Task<Domain.Entities.PetType> AddOrUpdateAsync(Domain.Entities.PetType petType)
         {
-            var dbExistingEntity = await GetAsync(petType.Id);
-            if (dbExistingEntity == null)
+            if (Guid.Empty == petType.Id)
             {
-                var newPetType = new PetType(petType.Name);
-                this.DbContext.PetTypes.Add(newPetType);
-                this.DbContext.SaveChanges();
+                var newPetType = new PetType(petType.Name, petType.HappinessInterval, petType.HungrinessInterval);
+                this.DbContext.PetTypes.Add(petType);
+                await this.DbContext.SaveChangesAsync();
 
                 return newPetType;
             }                
             else
             {
                 this.DbContext.PetTypes.Update(petType);
-                this.DbContext.SaveChanges();
+                await this.DbContext.SaveChangesAsync();
             }
 
             return petType;

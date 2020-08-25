@@ -1,5 +1,6 @@
 ﻿using System;
 using Pet.Game.Domain.Entities;
+using Pet.Game.Domain.Enums;
 
 namespace Pet.Game.API.Dtos
 {
@@ -7,10 +8,9 @@ namespace Pet.Game.API.Dtos
     {  
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public string HungrinessStatus { get; set; }
-        public string HappinessStatus { get; set; }
-        public int HappinessDecreaseInterval { get; set; }
-        public int HungrinessIncreaseInterval { get; set; }
         public PetType Type { get; set; }
+        public Guid UserId { get; set; }
+        public HappinessStatus HappinessStatus { get; internal set; }
+        public HungrinessStatus HungrinessStatus { get; internal set; }
     }
 }

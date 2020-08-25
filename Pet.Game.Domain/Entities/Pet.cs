@@ -11,9 +11,7 @@ namespace Pet.Game.Domain.Entities
         public HungrinessStatus HungrinessStatus { get; private set; }
         public HappinessStatus HappinessStatus { get; private set; }
 
-        public int HappinessDecreaseInterval { get; private set; }
-
-        public int HungrinessIncreaseInterval { get; private set; }
+        public Guid UserId { get; private set; }
 
         [Required]
         public virtual PetType Type { get; private set; }
@@ -21,36 +19,80 @@ namespace Pet.Game.Domain.Entities
         protected Pet() {}
 
         public Pet(string name, 
-            PetType petType,
-            int happinessDecreaseInterval = 1,
-            int hungrinessIncreaseInterval = 1) : base(name)
+            PetType petType, Guid userId) : base(name)
         {
             this.Type = petType;
             this.HungrinessStatus = HungrinessStatus.Neutral;
             this.HappinessStatus = HappinessStatus.Neutral;
-            this.HappinessDecreaseInterval = happinessDecreaseInterval;
-            this.HungrinessIncreaseInterval = hungrinessIncreaseInterval;
+            this.UserId = userId;
         }
 
-        public void IncreaseHungriness()
+        public void Increase<T>(int interval)
         {
-            var maxHungerStatus = Enum.GetValues(typeof(HungrinessStatus)).Cast<HungrinessStatus>().Max();
-            var nextStatus = this.HungrinessStatus + this.HungrinessIncreaseInterval;
-            if (!nextStatus.Equals(maxHungerStatus))
+            var type = typeof(T);
+            var maxStatusValue = Enum.GetValues(type).Cast<T>().Max();
+            if (type == typeof(HungrinessStatus))
             {
-                this.HungrinessStatus = nextStatus;
-                this.LastModified = DateTime.UtcNow;
-            }                
-        }
-        public void DecreaseHappiness()
-        {
-            var minHapinnessStatus = Enum.GetValues(typeof(HappinessStatus)).Cast<HappinessStatus>().Min();
-            var nextStatus = this.HappinessStatus - this.HappinessDecreaseInterval;
-            if (!nextStatus.Equals(minHapinnessStatus))
-            {
-                this.HappinessStatus = nextStatus;
-                this.LastModified = DateTime.UtcNow;
+                var nextStatus = this.HungrinessStatus + interval;
+                if (!nextStatus.Equals(maxStatusValue))
+                {
+                    this.HungrinessStatus = nextStatus;
+                    this.LastModified = DateTime.UtcNow;
+                }
             }
+            else if (type == typeof(HappinessStatus))
+            {
+                var nextStatus = this.HappinessStatus + interval;
+                if (!nextStatus.Equals(maxStatusValue))
+                {
+                    this.HappinessStatus = nextStatus;
+                    this.LastModified = DateTime.UtcNow;
+                }
+            }
+        }
+
+        public void Decrease<T>(int interval)
+        {
+            var type = typeof(T);
+            var maxStatusValue = Enum.GetValues(typeof(T)).Cast<T>().Min();
+            if (type == typeof(HungrinessStatus))
+            {
+                var nextStatus = this.HungrinessStatus - interval;
+                if (!nextStatus.Equals(maxStatusValue))
+                {
+                    this.HungrinessStatus = nextStatus;
+                    this.LastModified = DateTime.UtcNow;
+                }
+            }
+            else if (type == typeof(HappinessStatus))
+            {
+                var nextStatus = this.HappinessStatus - interval;
+                if (!nextStatus.Equals(maxStatusValue))
+                {
+                    this.HappinessStatus = nextStatus;
+                    this.LastModified = DateTime.UtcNow;
+                }
+            }
+        }
+
+        public void Stroke(int interval)
+        {
+            Increase<HappinessStatus>(interval);
+        }
+
+        public void Feed(int interval)
+        {
+            Decrease<HungrinessStatus>(interval);
+        }
+
+        public void SetPetType(PetType petType)
+        {
+            this.Type = petType;
+        }
+
+        public void SetUserId(Guid userId)
+        {
+            this.UserId = userId;
         }
     }
 }

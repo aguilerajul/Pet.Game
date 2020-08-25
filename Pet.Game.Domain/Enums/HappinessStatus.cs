@@ -2,9 +2,13 @@
 namespace Pet.Game.Domain.Enums
 {
     public enum HappinessStatus
-    {        
+    {
         UnHappy,
+        Crying,
+        Normal,
         Neutral,
-        Happy
+        Nice,
+        Happy,
+        Excited
     }
 }

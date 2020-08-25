@@ -36,18 +36,11 @@ namespace Pet.Game.API
 
             services.AddSingleton<IConfiguration>(provider => this.Configuration);
 
-            var isHostingServiceEnabled = bool.Parse(this.Configuration.GetSection("IsCheckStatusBackgroundServiceEnabled").Value);
-            if (isHostingServiceEnabled)
-            {
-                services.AddHostedService<BackgroundServices.CheckPetStatusesService>();
-            }
-
             AddRepositories(services);
         }
 
         private static void AddRepositories(IServiceCollection services)
         {
-            services.AddTransient<IUserPetsRepository, UserPetsRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IPetRepository, PetRepository>();
             services.AddTransient<IPetTypeRepository, PetTypeRepository>();
