@@ -13,13 +13,21 @@ The soluction was implemented using the DDD Patterns with Entity Framework.
 1. You need to have installed **SQL Server 2017** or superior.
 2. You need to have the **.NET Core 3.1** version enabled in your Visual Studio.
 
-### How To execute it
+### How to execute it
 1. We need to change the connection string **PetGameDataBase** contain it in appsettings.json in the projects: **Pet.Game.API** and **Pet.Game.WorkerService**
 2. We need to Set multiple projects as StartUp: Right click in the solution -> Properties -> Multiple startup Projects and choose:
 	- **Pet.Game.API** and set the action column to Start.
 	- **Pet.Game.WorkerService** and set the action column to Start.
 3. We need to run the migrations using the **Package Manager Console** set as Default Project: **Infrastructure/Pet.Game.Repository** and execute the command **update-database**
 4. Check that the DB was created and execute the solution.
+5. The only items created by default in the migrations will be PetTypes: **Dogs, Cats, Birds, Reptiles.**
+
+### How to test it
+1. Press F5 or make click in the Play button that appears in Visual Studio.
+2. Create a User using the Swagger UI, we just need to set a Name.
+3. Create a Pet and assign a User, PetType, Intervals (Happiness, Hungriness) and Name.
+4. Check that the data was created successfully.
+5. Now we can try to stroke or feed our pets with the User API actions.
 
 ## Additional information about the projects
 
