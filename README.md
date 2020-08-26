@@ -14,12 +14,14 @@ The soluction was implemented using the DDD Patterns with Entity Framework.
 2. You need to have the **.NET Core 3.1** version enabled in your Visual Studio.
 
 ### How To execute it
-1. We need to change the connection string **PetGameDataBase** contain it in appsettings.json in the projects: **Pet.Game.API** and **Pet.Game.WorkerService**
-2. We need to Set multiple projects as StartUp: Right click in the solution -> Properties -> Multiple startup Projects and choose:
+1. We need to change the connection string **PetGameDataBase** contain it in appsettings.json for these projects: **Pet.Game.API** and **Pet.Game.WorkerService**
+3. Set as startup project just for migrations purpose:
+	- **Pet.Game.API**
+4. We need to run the migrations using the **Package Manager Console** set as Default Project: **Infrastructure/Pet.Game.Repository** and execute the command **update-database**
+5. Check that the DB was created and execute the solution.
+6. Now We need to Set multiple projects as StartUp: Right click in the solution -> Properties -> Multiple startup Projects and choose:
 	- **Pet.Game.API** and set the action column to Start.
 	- **Pet.Game.WorkerService** and set the action column to Start.
-3. We need to run the migrations using the **Package Manager Console** set as Default Project: **Infrastructure/Pet.Game.Repository** and execute the command **update-database**
-4. Check that the DB was created and execute the solution.
 
 ## Additional information about the projects
 
