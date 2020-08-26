@@ -33,7 +33,7 @@ namespace Pet.Game.WorkerService.Tests
         {
             var user = new User("Julio");
             user.AddPet(new Domain.Entities.Pet("Boby", new PetType("Dogs", 1, 1), user.Id));
-            IEnumerable<User> users = new List<User> { 
+            IEnumerable<User> users = new List<User> {
                 user
             };
 
@@ -44,6 +44,8 @@ namespace Pet.Game.WorkerService.Tests
             configurationMock.Setup(c => c.GetSection(It.IsAny<string>()).Value).Returns("60");
 
             worker.StartAsync(new System.Threading.CancellationToken());
+
+            Assert.True(worker.WasExecutedSuccessfully);
         }
     }
 }

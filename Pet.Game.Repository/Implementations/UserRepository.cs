@@ -21,24 +21,24 @@ namespace Pet.Game.Repository.Implementations
 
         public async Task<User> AddOrUpdateAsync(User user)
         {
-            var userDuplicated = await GetByName(user.Name);
-            if (Guid.Empty == user.Id)
-            {
-                if (userDuplicated != null)
-                    throw new Exception($"The user name: {user.Name} already exists");
+            var nameDuplicated = await GetByNameAsync(user.Name);
+            if (nameDuplicated != null)
+                throw new Exception($"The user name: {user.Name} already exists");
 
+            var userById = await GetAsync(user.Id);
+            if (userById != null)
+            {
+                userById.SetName(user.Name);
+                await this.DbContext.SaveChangesAsync();
+                return userById;
+            }
+            else
+            {
                 var newUser = new User(user.Name);
-                this.DbContext.Users.Add(newUser);
+                this.DbContext.Users.Attach(newUser);
                 await this.DbContext.SaveChangesAsync();
                 return newUser;
             }
-            else
-            {                
-                this.DbContext.Users.Update(user);
-                await this.DbContext.SaveChangesAsync();
-            }
-
-            return user;
         }
 
         public async Task<User> GetAsync(Guid id)
@@ -48,7 +48,7 @@ namespace Pet.Game.Repository.Implementations
                 .SingleOrDefaultAsync(u => u.Id.Equals(id));
         }
 
-        public async Task<User> GetByName(string name)
+        public async Task<User> GetByNameAsync(string name)
         {
             return await this.DbContext.Users
                 .Include(u => u.Pets)
