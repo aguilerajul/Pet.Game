@@ -15,13 +15,14 @@ namespace Pet.Game.WorkerService
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> logger;
-
-        private IConfiguration configuration;
-        private IUserRepository userRepository;
-        private IPetRepository petRepository;        
+        private readonly IConfiguration configuration;
+        private readonly IUserRepository userRepository;
+        private readonly IPetRepository petRepository;
 
         private int intervalInSeconds = 60;
         private IEnumerable<User> users;
+
+        public bool WasExecutedSuccessfully { get; private set; }
 
         public Worker(ILogger<Worker> logger,
             IConfiguration configuration,
@@ -40,19 +41,20 @@ namespace Pet.Game.WorkerService
             intervalInSeconds = int.Parse(this.configuration.GetSection("IntervalInSeconds").Value);
             logger.LogInformation("Interval: {Interval}", intervalInSeconds);
 
-            this.users = await userRepository.ListAsync();
-            while (!stoppingToken.IsCancellationRequested)
+            try
             {
-                try
+                this.users = await userRepository.ListAsync();
+                while (!stoppingToken.IsCancellationRequested)
                 {
                     await UpdateStatusess();
+                    WasExecutedSuccessfully = true;
+                    await Task.Delay(this.intervalInSeconds * 1000, stoppingToken);
                 }
-                catch (Exception ex)
-                {
-                    logger.LogError("Error trying to get users", ex);
-                }
-
-                await Task.Delay(this.intervalInSeconds * 1000, stoppingToken);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("Unexpected error:", ex);
+                WasExecutedSuccessfully = false;
             }
         }
 
