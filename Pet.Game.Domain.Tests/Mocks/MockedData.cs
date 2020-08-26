@@ -1,6 +1,5 @@
 ﻿using Pet.Game.Domain.Entities;
 using System;
-using System.Collections.Generic;
 
 namespace Pet.Game.Domain.Tests.Mocks
 {
@@ -25,23 +24,14 @@ namespace Pet.Game.Domain.Tests.Mocks
             return dogPetTytpeData;
         }
 
-        public Domain.Entities.Pet GetMockedPet(string petName, string userName, string petTypeName)
+        public Entities.Pet GetMockedPet(string petName, string userName, string petTypeName)
         {
             var mockedPetType = GetMockedPetType(petTypeName);
             var mockedUser = new User(userName);
-            var dogPetData = new Domain.Entities.Pet(petName, mockedPetType, mockedUser.Id);
+            var dogPetData = new Entities.Pet(petName, mockedPetType, mockedUser.Id);
             dogPetData.SetId(userId);
 
             return dogPetData;
-        }
-
-        public User GetMockedUser(string userName)
-        {
-            var userData = new User(userName);
-            userData.SetId(userId);
-            userData.AddPet(GetMockedPet("Pet", userName, "PetType"));
-
-            return userData;
         }
 
         public User GetMockedUserWithoutPet(string name)
@@ -51,33 +41,5 @@ namespace Pet.Game.Domain.Tests.Mocks
 
             return userData;
         }
-
-        public IEnumerable<User> GetMockedUsers()
-        {
-            return new List<User>
-            {
-                GetMockedUser("Julio")
-            };
-        }
-
-        public IEnumerable<Domain.Entities.Pet> GetMockedPets()
-        {
-            return new List<Domain.Entities.Pet>
-            {
-                GetMockedPet("Boby", "Julio", "Dogs")
-            };
-        }
-
-        public IEnumerable<PetType> GetMockedPetTypes()
-        {
-            return new List<PetType>
-            {
-                new PetType("Dogs", 1, 1),
-                new PetType("Cats", 1, 1),
-                new PetType("Reptiles", 1, 1),
-                new PetType("Birds", 1, 1)
-            };
-        }
-
     }
 }
