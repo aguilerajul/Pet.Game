@@ -19,7 +19,7 @@ The soluction was implemented using the DDD Patterns with Entity Framework.
 	- **Pet.Game.API**
 4. We need to run the migrations using the **Package Manager Console** set as Default Project: **Infrastructure/Pet.Game.Repository** and execute the command **update-database**
 5. Check that the DB was created and execute the solution.
-6. Now need to Set multiple projects as StartUp: Right click in the solution -> Properties -> Multiple startup Projects and choose:
+6. Now We need to Set multiple projects as StartUp: Right click in the solution -> Properties -> Multiple startup Projects and choose:
 	- **Pet.Game.API** and set the action column to Start.
 	- **Pet.Game.WorkerService** and set the action column to Start.
 
