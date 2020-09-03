@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+using Serilog.Events;
+using System;
 
 namespace Pet.Game.API
 {
@@ -7,6 +10,13 @@ namespace Pet.Game.API
     {
         public static void Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+                    .MinimumLevel.Debug()
+                    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                    .Enrich.FromLogContext()
+                    .WriteTo.File(System.IO.Path.Combine(Environment.CurrentDirectory, @"Logs\ApiTrace.log"))
+                    .CreateLogger();
+
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -15,6 +25,7 @@ namespace Pet.Game.API
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+                .UseSerilog();
     }
 }
