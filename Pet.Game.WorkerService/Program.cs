@@ -3,8 +3,6 @@ using Microsoft.Extensions.Hosting;
 using Pet.Game.Domain.Interfaces;
 using Pet.Game.Repository.Implementations;
 using Serilog;
-using Serilog.Events;
-using System;
 
 namespace Pet.Game.WorkerService
 {
@@ -12,12 +10,7 @@ namespace Pet.Game.WorkerService
     {
         public static void Main(string[] args)
         {
-            Log.Logger = new LoggerConfiguration()
-                    .MinimumLevel.Debug()
-                    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-                    .Enrich.FromLogContext()
-                    .WriteTo.File(System.IO.Path.Combine(Environment.CurrentDirectory, @"Logs\WorkServiceLog.log"))
-                    .CreateLogger();
+            Log.Logger = Infrastructure.Logging.SerilogHelper.GetNewLoggerToFileConfiguration("ApiTrace");
 
             try
             {

@@ -27,7 +27,6 @@ namespace Pet.Game.Repository
         public DbSet<Domain.Entities.Pet> Pets { get; set; }
         public DbSet<PetType> PetTypes { get; set; }
         public DbSet<User> Users { get; set; }
-        //public DbSet<UserPets> UsersPets { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

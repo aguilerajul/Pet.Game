@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pet.Game.Domain\Pet.Game.Domain.csproj" />
+    <ProjectReference Include="..\Pet.Game.Infrastructure\Pet.Game.Infrastructure.csproj" />
     <ProjectReference Include="..\Pet.Game.Repository\Pet.Game.Repository.csproj" />
   </ItemGroup>
 
