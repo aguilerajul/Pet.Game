@@ -17,26 +17,38 @@ namespace Pet.Game.Repository.Implementations
 
         public async Task<Domain.Entities.PetType> AddOrUpdateAsync(Domain.Entities.PetType petType)
         {
-            if (Guid.Empty == petType.Id)
+            var nameDuplicated = await GetByNameAsync(petType.Name);
+            if (nameDuplicated != null)
+                throw new Exception($"The Pet Type with name: {petType.Name} already exists");
+
+            var petTypeById = await GetAsync(petType.Id);
+            if (petTypeById != null)
+            {
+                petTypeById.SetName(petType.Name);
+                petTypeById.HappinessInterval = petType.HappinessInterval;
+                petTypeById.HungrinessInterval = petType.HungrinessInterval;
+                await this.DbContext.SaveChangesAsync();
+                return petTypeById;
+            }
+            else
             {
                 var newPetType = new PetType(petType.Name, petType.HappinessInterval, petType.HungrinessInterval);
-                this.DbContext.PetTypes.Add(petType);
+                this.DbContext.PetTypes.Attach(petType);
                 await this.DbContext.SaveChangesAsync();
 
                 return newPetType;
-            }                
-            else
-            {
-                this.DbContext.PetTypes.Update(petType);
-                await this.DbContext.SaveChangesAsync();
             }
-
-            return petType;
         }
 
         public async Task<Domain.Entities.PetType> GetAsync(Guid id)
         {
             return await this.DbContext.PetTypes.FindAsync(id);
+        }
+
+        public async Task<Domain.Entities.PetType> GetByNameAsync(string name)
+        {
+            return await this.DbContext.PetTypes
+                .SingleOrDefaultAsync(u => u.Name.Equals(name));
         }
 
         public async Task<IEnumerable<Domain.Entities.PetType>> ListAsync()

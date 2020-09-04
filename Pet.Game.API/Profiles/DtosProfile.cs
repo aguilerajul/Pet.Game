@@ -17,8 +17,10 @@ namespace Pet.Game.API.Profiles
                            opt => opt.MapFrom(src => src.HappinessStatus.ToString()))
                 .ForMember(dest => dest.HungrinessStatus,
                            opt => opt.MapFrom(src => src.HungrinessStatus.ToString()));
-            CreateMap<Dtos.PetRequestDto, Domain.Entities.Pet>();
-            
+            CreateMap<Dtos.PetRequestDto, Domain.Entities.Pet>()
+                .ForMember(dest => dest.Id,
+                           opt => opt.MapFrom(src => src.PetId));
+
         }
     }
 }

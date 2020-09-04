@@ -4,8 +4,8 @@ namespace Pet.Game.Domain.Entities
 {
     public class PetType : EntityBase
     {
-        public int HappinessInterval { get; private set; }
-        public int HungrinessInterval { get; private set; }
+        public int HappinessInterval { get; set; }
+        public int HungrinessInterval { get; set; }
 
         protected PetType() { }
         public PetType(string name, int happinessInterval, int hungrinessInterval) : base(name)

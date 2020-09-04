@@ -28,5 +28,10 @@ namespace Pet.Game.Domain.Base
 		{
 			this.Id = id;
 		}
-	}
+
+        public void SetName(string name)
+        {
+            this.Name = name;
+        }
+    }
 }
