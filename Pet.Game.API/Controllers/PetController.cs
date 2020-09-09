@@ -95,7 +95,7 @@ namespace Pet.Game.API.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("Stroke/{petId}")]
         public async Task<IActionResult> StrokePet(Guid petId)
         {
@@ -114,7 +114,7 @@ namespace Pet.Game.API.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("Feed/{petId}")]
         public async Task<IActionResult> FeedPet(Guid petId)
         {
