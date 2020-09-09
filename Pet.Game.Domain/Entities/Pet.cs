@@ -84,15 +84,5 @@ namespace Pet.Game.Domain.Entities
         {
             Decrease<HungrinessStatus>(interval);
         }
-
-        public void SetPetType(PetType petType)
-        {
-            this.Type = petType;
-        }
-
-        public void SetUserId(Guid userId)
-        {
-            this.UserId = userId;
-        }
     }
 }

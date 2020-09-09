@@ -16,9 +16,6 @@ namespace Pet.Game.API.Tests
     public class UserControllerTests : BaseTests
     {       
         private readonly Mock<IUserRepository> userRepositoryMock;
-        private readonly Mock<IPetTypeRepository> petTypeRepositoryMock;
-        private readonly Mock<IPetRepository> petRepositoryMock;
-
         private readonly Mock<ILogger<UserController>> iloggerMock;
 
         private readonly UserController userController;
@@ -26,15 +23,9 @@ namespace Pet.Game.API.Tests
         public UserControllerTests()
         {
             userRepositoryMock = new Mock<IUserRepository>();
-            petTypeRepositoryMock = new Mock<IPetTypeRepository>();
-            petRepositoryMock = new Mock<IPetRepository>();
-
             iloggerMock = new Mock<ILogger<UserController>>();
 
-            userController = new UserController(iloggerMock.Object, userRepositoryMock.Object,
-                petRepositoryMock.Object, petTypeRepositoryMock.Object, mapper);
-
-            
+            userController = new UserController(iloggerMock.Object, userRepositoryMock.Object, mapper);
         }
 
         [Fact]
@@ -124,93 +115,6 @@ namespace Pet.Game.API.Tests
             result.Should()
                 .BeOfType<OkObjectResult>()
                 .Which.Value.Should().BeEquivalentTo(userResponseDto);
-        }
-
-        [Fact]
-        public async Task Add_User_Pet_Async_Success()
-        {
-            var petName = "Boby";
-            var userName = "Julio";
-            var petTypeName = "Dogs";
-            var petRequestDto = new PetRequestDto
-            {
-                Name = petName,
-                PetId = this.mockedData.petId,
-                TypeId = this.mockedData.petTypeId,
-                UserId = this.mockedData.userId
-            };
-
-            var userData = this.mockedData.GetMockedUser(userName, petName, petTypeName);
-            var petTypeData = this.mockedData.GetMockedPetType(petTypeName);
-            var petData = this.mockedData.GetMockedPet(petName, userName, petTypeName);
-
-            // Arrange
-            userRepositoryMock.Setup(repo => repo.AddOrUpdateAsync(It.IsAny<User>()))
-                .Returns(Task.FromResult(userData));
-
-            userRepositoryMock.Setup(repo => repo.GetAsync(It.IsAny<Guid>()))
-                .Returns(Task.FromResult(userData));
-
-            petTypeRepositoryMock.Setup(repo => repo.GetAsync(It.IsAny<Guid>()))
-                .Returns(Task.FromResult(petTypeData));
-
-            petRepositoryMock.Setup(repo => repo.AddOrUpdateAsync(It.IsAny<Domain.Entities.Pet>()))
-                .Returns(Task.FromResult(petData));
-
-            // Act
-            var result = await userController.AddPet(petRequestDto);
-
-            // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<OkObjectResult>();
-        }
-
-        [Fact]
-        public async Task Stroke_User_Pet_Async_Success()
-        {
-            var petName = "Boby";
-            var userName = "Julio";
-            var petTypeName = "Dogs";
-            var petData = this.mockedData.GetMockedPet(petName, userName, petTypeName);
-
-            // Arrange
-            petRepositoryMock.Setup(repo => repo.Stroke(It.IsAny<Guid>()))
-                .Returns(Task.FromResult(petData));
-
-            // Act
-            var result = await userController.StrokePet(this.mockedData.petId);
-
-            // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<OkObjectResult>();
-            var petResponseDto = mapper.Map<PetResponseDto>(petData);
-            result.Should()
-                .BeOfType<OkObjectResult>()
-                .Which.Value.Should().BeEquivalentTo(petResponseDto);
-        }
-
-        [Fact]
-        public async Task Feed_User_Pet_Async_Success()
-        {
-            var petName = "Boby";
-            var userName = "Julio";
-            var petTypeName = "Dogs";
-            var petData = this.mockedData.GetMockedPet(petName, userName, petTypeName);
-
-            // Arrange
-            petRepositoryMock.Setup(repo => repo.Feed(It.IsAny<Guid>()))
-                .Returns(Task.FromResult(petData));
-
-            // Act
-            var result = await userController.FeedPet(this.mockedData.petId);
-
-            // Assert
-            result.Should().NotBeNull();
-            result.Should().BeOfType<OkObjectResult>();
-            var petResponseDto = mapper.Map<PetResponseDto>(petData);
-            result.Should()
-                .BeOfType<OkObjectResult>()
-                .Which.Value.Should().BeEquivalentTo(petResponseDto);
         }
     }
 }
