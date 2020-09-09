@@ -18,19 +18,13 @@ namespace Pet.Game.API.Controllers
         private readonly IMapper mapper;
         private readonly ILogger<UserController> logger;
         private readonly IUserRepository userRepository;
-        private readonly IPetRepository petRepository;
-        private readonly IPetTypeRepository petTypeRepository;
 
-        public UserController(ILogger<UserController> logger, 
-            IUserRepository userRepository, 
-            IPetRepository petRepository,
-            IPetTypeRepository petTypeRepository,
+        public UserController(ILogger<UserController> logger,
+            IUserRepository userRepository,
             IMapper mapper)
         {
             this.logger = logger;
             this.userRepository = userRepository;
-            this.petRepository = petRepository;
-            this.petTypeRepository = petTypeRepository;
             this.mapper = mapper;
         }
 
@@ -53,7 +47,6 @@ namespace Pet.Game.API.Controllers
         }
 
         [HttpGet]
-        [Route("List")]
         public async Task<IActionResult> List()
         {
             try
@@ -72,7 +65,6 @@ namespace Pet.Game.API.Controllers
         }
 
         [HttpPost]
-        [Route("AddUser")]
         public async Task<IActionResult> Post([FromBody] UserRequestDto data)
         {
             try
@@ -80,72 +72,6 @@ namespace Pet.Game.API.Controllers
                 var newUser = mapper.Map<User>(data);
                 newUser = await this.userRepository.AddOrUpdateAsync(newUser);
                 return Ok(mapper.Map<UserResponseDto>(newUser));
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "An Error has Occurred when we try to add a new user");
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-        [HttpPost]
-        [Route("AddPet")]
-        public async Task<IActionResult> AddPet([FromBody] PetRequestDto data)
-        {
-            try
-            {
-                var user = await userRepository.GetAsync(data.UserId);
-                if (user == null)
-                    return NotFound($"UserId: {data.UserId}");
-
-                var petType = await petTypeRepository.GetAsync(data.TypeId);
-                if (petType == null)
-                    return NotFound($"TypeId: {data.TypeId}");
-
-                var newPet = mapper.Map<Domain.Entities.Pet>(data);
-                newPet.SetUserId(user.Id);
-                newPet.SetPetType(petType);
-
-                newPet = await petRepository.AddOrUpdateAsync(newPet);
-                return Ok(mapper.Map<PetResponseDto>(newPet));
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "An Error has Occurred when we try to add a new user");
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-        [HttpPost]
-        [Route("Stroke/{petId}")]
-        public async Task<IActionResult> StrokePet(Guid petId)
-        {
-            try
-            {
-                var pet = await this.petRepository.Stroke(petId);
-                if (pet == null)
-                    return NotFound();
-
-                return Ok(mapper.Map<PetResponseDto>(pet));
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "An Error has Occurred when we try to add a new user");
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-        [HttpPost]
-        [Route("Feed/{petId}")]
-        public async Task<IActionResult> FeedPet(Guid petId)
-        {
-            try
-            {
-                var pet = await this.petRepository.Feed(petId);
-                if (pet == null)
-                    return NotFound();
-
-                return Ok(mapper.Map<PetResponseDto>(pet));
             }
             catch (Exception ex)
             {

@@ -45,7 +45,6 @@ namespace Pet.Game.API.Controllers
         }
 
         [HttpGet]
-        [Route("List")]
         public async Task<IActionResult> List()
         {
             try
@@ -64,7 +63,6 @@ namespace Pet.Game.API.Controllers
         }
 
         [HttpPost]
-        [Route("AddPetType")]
         public async Task<IActionResult> Post([FromBody] PetTypeDto data)
         {
             try
